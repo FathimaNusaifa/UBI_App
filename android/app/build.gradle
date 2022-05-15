@@ -291,6 +291,8 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    implementation project(':react-native-linear-gradient')
 }
 
 if (isNewArchitectureEnabled()) {
