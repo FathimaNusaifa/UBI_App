@@ -11,12 +11,12 @@ const stack = createNativeStackNavigator();
 
 const ProfileNavigator = () => {
   return (
-    <stack.Navigator mode="card" screenOptions={{ headerShown: false }} >
+    <stack.Navigator mode="modal" screenOptions={{ headerShown: false }} >
         <stack.Screen name={routes.PROFILEHOME} component={ProfileScreen}/>
-        <stack.Screen name={routes.PERSONALINFO} component={PersonalInfoScreen} options = {{headerShown : true}}  />
-        <stack.Screen name={routes.VEHICLEINFO} component={VehicleInfoScreen} options = {{headerShown : true}} />
-        <stack.Screen name={routes.PASSWORDCHANGE} component={PasswordChangeScreen} options = {{headerShown : true}} />
-        <stack.Screen name={routes.DELETEACCOUNT} component={AccountDeleteScreen} options = {{headerShown : true}} />
+        <stack.Screen name={routes.PERSONALINFO} component={PersonalInfoScreen}  />
+        <stack.Screen name={routes.VEHICLEINFO} component={VehicleInfoScreen} />
+        <stack.Screen name={routes.PASSWORDCHANGE} component={PasswordChangeScreen} />
+        <stack.Screen name={routes.DELETEACCOUNT} component={AccountDeleteScreen} />
     </stack.Navigator>
   );
 };

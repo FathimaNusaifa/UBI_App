@@ -1,13 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, StatusBar, TouchableOpacity, Text} from 'react-native';
 import React from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {Screen, Block} from '../components/index';
+import {colors} from '../theme';
+import Header from '../navigation/Header';
 import routes from '../navigation/routes';
 
 const ProfileScreen = ({navigation}) => {
   return (
-    <View style={styles.container}>
-      <Text>Profile Screen</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.PERSONALINFO)}>
+    <Screen>
+      <StatusBar backgroundColor={colors.white} barStyle="light-content" />
+      <Header title="Profile" header />
+      <Block flex={1} style={styles.container}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.PERSONALINFO)}>
         <Text>Personal Info</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.VEHICLEINFO)}>
@@ -19,7 +23,8 @@ const ProfileScreen = ({navigation}) => {
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.DELETEACCOUNT)}>
         <Text>Delete Account</Text>
       </TouchableOpacity>
-    </View>
+      </Block>
+    </Screen>
   );
 };
 
@@ -28,8 +33,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container : {
       flex : 1,
-       justifyContent: 'center',
-       alignItems : 'center'
+      padding : 10
   },
   button: {
     alignItems: 'center',

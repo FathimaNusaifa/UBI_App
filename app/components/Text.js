@@ -36,14 +36,6 @@ const Typography = (props) => {
 
     const textStyles = [
         styles.text,
-        h1 && styles.h1,
-        h2 && styles.h2,
-        h3 && styles.h3,
-        title && styles.title,
-        body && styles.body,
-        caption && styles.caption,
-        small && styles.small,
-        size && { fontSize: size },
         transform && { textTransform: transform },
         align && { textAlign: align },
         bold && styles.bold,
@@ -60,6 +52,14 @@ const Typography = (props) => {
         white && styles.white,
         dark && styles.dark,
         light && styles.light,
+        h1 && styles.h1,
+        h2 && styles.h2,
+        h3 && styles.h3,
+        title && styles.title,
+        body && styles.body,
+        caption && styles.caption,
+        small && styles.small,
+        size && { fontSize: size },
         style
     ];
 

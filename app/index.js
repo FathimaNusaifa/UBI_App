@@ -5,7 +5,7 @@ import DrawerNavigator from './navigation/DrawerNavigator';
 import NavigationTheme from './navigation/NavigationTheme';
 
 const Index = () => {
-  const authStatus = false;
+  const authStatus = true;
 
   return (
     <NavigationContainer theme={NavigationTheme}>
