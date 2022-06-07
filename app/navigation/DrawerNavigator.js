@@ -1,5 +1,7 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 //import { createDrawerNavigator,  DrawerContentScrollView,DrawerItemList, DrawerItem, useDrawerProgress } from '@react-navigation/drawer';
 //import Animated from 'react-native-reanimated';
 import PolicyDetailsScreen from '../screens/PolicyDetails';
@@ -35,14 +37,24 @@ const Drawer = createDrawerNavigator();
 } */
 const DrawerNavigator = () => {
   return (
-    <Drawer.Navigator initialRouteName="home" screenOptions={{
+    <Drawer.Navigator initialRouteName="home" screenOptions={({navigation}) => ({
       headerShown : false,
       drawerType: 'slide',
       drawerActiveTintColor : colors.primary,
       drawerActiveBackgroundColor : colors.white,
       drawerInactiveTintColor : colors.black,
       drawerInactiveBackgroundColor : colors.white
-    }}
+      // headerStyle : {
+      //   backgroundColor : colors.white,
+      //   height : 50
+      // },
+      // headerTitleAlign : 'center',
+      // headerLeft: () => (
+      //   <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.headerLeft}>
+      //     <Icon name="bars" size={20} color={colors.black} />
+      //   </TouchableOpacity>
+      // )
+    })}
     //useLegacyImplementation
       //drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
@@ -81,3 +93,33 @@ const DrawerNavigator = () => {
 };
 
 export default DrawerNavigator;
+
+const styles = StyleSheet.create({
+  headerLeft: {
+    marginLeft: 15
+  },
+  headerTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500'
+  },
+  headerRight: {
+    marginRight: 15
+  },
+  // drawer content
+  drawerLabel: {
+    fontSize: 14
+  },
+  drawerLabelFocused: {
+    fontSize: 14,
+    color: '#551E18',
+    fontWeight: '500'
+  },
+  drawerItem: {
+    height: 50,
+    justifyContent: 'center'
+  },
+  drawerItemFocused: {
+    backgroundColor: '#ba9490'
+  }
+});

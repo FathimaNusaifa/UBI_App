@@ -1,18 +1,24 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {StyleSheet, StatusBar, TouchableOpacity, Text} from 'react-native';
 import React from 'react';
+import {Screen, Block} from '../components/index';
+import {colors} from '../theme';
+import Header from '../navigation/Header';
 import routes from '../navigation/routes';
 
 const SettingScreen = ({navigation}) => {
   return (
-    <View style={styles.container}>
-      <Text>Settings</Text>
+    <Screen>
+      <StatusBar backgroundColor={colors.white} barStyle="light-content" />
+      <Header title="Settings" header />
+      <Block flex={1} style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.PRIVACYPOLICY)}>
         <Text>Privacy Policy</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.HELP)}>
         <Text>Help</Text>
       </TouchableOpacity>
-    </View>
+      </Block>
+    </Screen>
   );
 };
 
@@ -21,8 +27,7 @@ export default SettingScreen;
 const styles = StyleSheet.create({
   container : {
       flex : 1,
-       justifyContent: 'center',
-       alignItems : 'center'
+      padding : 10
   },
   button: {
     alignItems: 'center',
