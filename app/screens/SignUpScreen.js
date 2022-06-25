@@ -1,24 +1,35 @@
 import {StyleSheet, ScrollView, StatusBar} from 'react-native';
 import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {Screen, Block, Typography, Button, TextBox} from '../components/index';
+import {Screen, Block, Typography } from '../components/index';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-import routes from '../navigation/routes';
+import * as Yup from 'yup';
 import {colors} from '../theme/index';
+import Header from '../navigation/Header';
+import useAuth from '../auth/authHook';
+
+// Form Components
+import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label('Email'),
+  name: Yup.string().required().min(3).label('Name'),
+  nic: Yup.string().required().min(10).max(12).label('Nic').matches(/^([0-9]{9}[x|X|v|V]|[0-9]{12})$/),
+  phone: Yup.string().required().min(3).label('Phone'),
+  password: Yup.string().required().min(6).label('Password').matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+    'Password Not Strong'
+  ) ,
+  confirmPassword: Yup.string().required().label('ConfirmPassword').oneOf([Yup.ref('password'), null], 'Passwords must match')
+});
 
 const SignInScreen = () => {
-  const [email, setEmail] = useState(null);
-  const [name, setName] = useState(null);
-  const [phoneNumer, setphoneNumer] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [NIC, setNIC] = useState(null);
-  const [confirmPassword, setconfirmPassword] = useState(null);
-  const navigation = useNavigation();
+  const [error, setError] = useState();
+  const auth = useAuth();
 
-  const handleSignUp = () => {
-    console.log(email, name, phoneNumer, NIC, password, confirmPassword);
-    navigation.navigate(routes.WELCOME);
+  const handleSignUp = async (userInfo) => {
+    console.log(userInfo);
+    auth.logIn('hsjsgf64525');
   };
 
   return (
@@ -27,7 +38,8 @@ const SignInScreen = () => {
       <LinearGradient
         colors={[colors.secondary, colors.primary]}
         style={styles.linearBg}>
-        <Block flex={0.2} center middle>
+            <Header back/>
+        <Block flex={0.3} center middle>
           <Typography bold white size={30}>
             Welcome to UBI!
           </Typography>
@@ -40,75 +52,72 @@ const SignInScreen = () => {
           duration={2000}
           style={styles.animationBlock}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <Typography black style={styles.label}>
-              Email
-            </Typography>
-            <TextBox
-              email
-              icon="mail"
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              placeholder="Your email"
-            />
-            <Typography black style={styles.label}>
-              Username
-            </Typography>
-            <TextBox
-              email
-              icon="person"
-              onChangeText={setName}
-              autoCapitalize="none"
-              placeholder="Your name"
-            />
-            <Typography black style={styles.label}>
-              Phone
-            </Typography>
-            <TextBox
-              phone
-              icon="ios-keypad"
-              onChangeText={setphoneNumer}
-              autoCapitalize="none"
-              placeholder="Your phone number"
-            />
-            <Typography black style={styles.label}>
-              NIC
-            </Typography>
-            <TextBox
-              icon="pricetag"
-              onChangeText={setNIC}
-              autoCapitalize="none"
-              placeholder="Your NIC"
-            />
-            <Typography black style={styles.label}>
-              Password
-            </Typography>
-            <TextBox
-              icon="lock-closed-sharp"
-              onChangeText={setPassword}
-              autoCapitalize="none"
-              placeholder="Enter password"
-              secureTextEntry
-            />
-            <Typography black style={styles.label}>
-              Conform Password
-            </Typography>
-            <TextBox
-              icon="lock-closed-outline"
-              onChangeText={setconfirmPassword}
-              autoCapitalize="none"
-              placeholder="Confirm password"
-              secureTextEntry
-            />
-            <Button primary shadow onPress={() => handleSignUp()}>
-              <Typography center white bold size={15}>
-                SIGN UP
-              </Typography>
-            </Button>
-            <Button white shadow onPress={() => navigation.goBack()}>
-              <Typography center black bold size={15}>
-                BACK
-              </Typography>
-            </Button>
+          <Form
+              initialValues={{
+                email: '',
+                name : '',
+                phone : '',
+                nic : '',
+                password: '',
+                confirmPassword : ''
+              }}
+              validationSchema={validationSchema}
+              onSubmit={handleSignUp}>
+              <ErrorMessage error={error} visible={error} />
+              <FormInput
+                  name="email"
+                  icon="mail"
+                  placeholder="Email"
+                  email
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="emailAddress"
+              />
+              <FormInput
+                  name="name"
+                  icon="person"
+                  placeholder="Name"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="username"
+              />
+              <FormInput
+                name="phone"
+                icon="phone-portrait-sharp"
+                number
+                placeholder="Phone"
+                autoCapitalize="none"
+                autoCorrect={false}
+                textContentType="telephoneNumber"
+              />
+              <FormInput
+                  name="nic"
+                  icon="pricetag"
+                  placeholder="National Identity Card"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="username"
+              />
+              <FormInput
+                  name="password"
+                  icon="lock-closed"
+                  placeholder="Password"
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="password"
+              />
+              <FormInput
+                  name="confirmPassword"
+                  icon="lock-closed-outline"
+                  placeholder="Confirm Password"
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="password"
+              />
+              <SubmitButton title="SIGN UP" />
+            </Form>
           </ScrollView>
         </Animatable.View>
       </LinearGradient>
@@ -123,7 +132,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   animationBlock: {
-    flex: 0.8,
+    flex: 0.7,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

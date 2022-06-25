@@ -1,21 +1,32 @@
 import {StyleSheet, StatusBar} from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Screen, Block, Typography, Button, TextBox} from '../components/index';
+import {Screen, Block, Typography} from '../components/index';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
+import * as Yup from 'yup';
 import {colors} from '../theme';
 import routes from '../navigation/routes';
+import Header from '../navigation/Header';
+import useAuth from '../auth/authHook';
+
+// Form Components
+import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label('Email'),
+  password: Yup.string().required().min(6).label('Password')
+});
 
 const SignInScreen = () => {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
   const navigation = useNavigation();
+  const auth = useAuth();
+  const [loginFailed, setloginFailed] = useState(false);
 
-  const handleLogin = () => {
-    console.log(email, password);
-    navigation.navigate(routes.WELCOME);
-  };
+  const handleLogin = async () => {
+    setloginFailed(true);
+    auth.logIn('bvkla63279dhsdh');
+};
 
   return (
     <Screen>
@@ -23,6 +34,7 @@ const SignInScreen = () => {
       <LinearGradient
         colors={[colors.secondary, colors.primary]}
         style={styles.linearBg}>
+          <Header back/>
         <Block flex={0.5} center middle>
           <Typography bold white size={30}>
             Welcome to UBI!
@@ -32,34 +44,31 @@ const SignInScreen = () => {
           </Typography>
         </Block>
         <Animatable.View animation="fadeInUpBig" style={styles.animationBlock}>
-          <Block>
-            <Typography black style={styles.label} >Email</Typography>
-            <TextBox
-              email
-              icon="mail"
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              placeholder="Your email"
-            />
-            <Typography black style={styles.label} >Password</Typography>
-            <TextBox
-              icon="lock-closed-sharp"
-              onChangeText={setPassword}
-              autoCapitalize="none"
-              placeholder="Your password"
-              secureTextEntry={true}
-            />
-            <Button gradient shadow onPress={() => handleLogin()}>
-              <Typography center white bold size={15}>
-                SIGN IN
-              </Typography>
-            </Button>
-            <Button white shadow onPress={() => navigation.goBack()}>
-              <Typography center black bold size={15}>
-                BACK
-              </Typography>
-            </Button>
-          </Block>
+          <Form
+              initialValues={{ email: '', password: '' }}
+              validationSchema={validationSchema}
+              onSubmit={handleLogin}>
+              <ErrorMessage error="Invalid email or password!" visible={loginFailed} />
+              <FormInput
+                  name="email"
+                  icon="mail"
+                  placeholder="Email"
+                  email
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="emailAddress"
+              />
+              <FormInput
+                  name="password"
+                  icon="lock-closed"
+                  placeholder="Password"
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="password"
+              />
+              <SubmitButton title="SIGN IN" />
+            </Form>
           <Block flex={false} style={styles.forgotBlock}>
             <Typography center primary bold size={12} onPress={() => navigation.navigate(routes.FORGOTPASSWORD)}>
               Forgot Password?
@@ -106,7 +115,7 @@ const styles = StyleSheet.create({
   },
   forgotBlock : {
     flex : 1,
-    justifyContent : 'flex-end'
+    justifyContent : 'center'
   }
 });
 
@@ -121,3 +130,37 @@ const styles = StyleSheet.create({
       </TouchableOpacity>
     </View>
  */
+
+    /*
+    {"value":{"email":"","password":""},"path":"password","type":"required","errors":["password is a required field"],"params":{"value":"","originalValue":"","path":"password"},"inner":[],"name":"ValidationError","message":"password is a required field"}
+ LOG  {"value":{"email":"","password":""},"path":"password","type":"required","errors":["password is a required field"],"params":{"value":"","originalValue":"","path":"password"},"inner":[],"name":"ValidationError","message":"password is a required field"}
+    */
+
+  /* <Block>
+            <Typography black style={styles.label} >Email</Typography>
+            <TextBox
+              email
+              icon="mail"
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              placeholder="Your email"
+            />
+            <Typography black style={styles.label} >Password</Typography>
+            <TextBox
+              icon="lock-closed-sharp"
+              onChangeText={setPassword}
+              autoCapitalize="none"
+              placeholder="Your password"
+              secureTextEntry={true}
+            />
+            {
+              isError ? (
+                <Typography accent bold>{errorMessage}</Typography>
+              ) : null
+            }
+            <Button gradient shadow onPress={() => handleLogin()}>
+              <Typography center white bold size={15}>
+                SIGN IN
+              </Typography>
+            </Button>
+          </Block> */

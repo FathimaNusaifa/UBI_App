@@ -22,5 +22,7 @@ export default Object.freeze({
   MESSAGES : 'Messages',
   NOTIFICATIONS : 'Notification',
   HELP: 'Help',
-  PRIVACYPOLICY: 'PrivacyPolicy'
+  PRIVACYPOLICY: 'PrivacyPolicy',
+  RESETPASSSCREEN : 'ResetPassScreen',
+  OTPSCREEN : 'OTPScreen'
 });

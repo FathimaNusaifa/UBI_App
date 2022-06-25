@@ -13,10 +13,10 @@ const ProfileNavigator = () => {
   return (
     <stack.Navigator mode="modal" screenOptions={{ headerShown: false }} >
         <stack.Screen name={routes.PROFILEHOME} component={ProfileScreen}/>
-        <stack.Screen name={routes.PERSONALINFO} component={PersonalInfoScreen}  />
-        <stack.Screen name={routes.VEHICLEINFO} component={VehicleInfoScreen} />
-        <stack.Screen name={routes.PASSWORDCHANGE} component={PasswordChangeScreen} />
-        <stack.Screen name={routes.DELETEACCOUNT} component={AccountDeleteScreen} />
+        <stack.Screen name={routes.PERSONALINFO} component={PersonalInfoScreen} options = {{headerShown : true , title:'Personal Info'}}  />
+        <stack.Screen name={routes.VEHICLEINFO} component={VehicleInfoScreen} options = {{headerShown : true , title:'Vehicle Info'}} />
+        <stack.Screen name={routes.PASSWORDCHANGE} component={PasswordChangeScreen} options = {{headerShown : true , title:'Change Password'}} />
+        <stack.Screen name={routes.DELETEACCOUNT} component={AccountDeleteScreen} options = {{headerShown : true , title:'Delete Account'}} />
     </stack.Navigator>
   );
 };

@@ -1,14 +1,16 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Block, Typography} from '../components/index';
 import {colors, sizes} from '../theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
+import useAuth from '../auth/authHook';
 
 const Header = props => {
-  const {title, header, back, label} = props;
+  const {title, header, back} = props;
   const navigation = useNavigation();
+  const auth = useAuth();
 
   if (header) {
     return (
@@ -26,9 +28,11 @@ const Header = props => {
             {title}
           </Typography>
         </Block>
-        <Block style={styles.right}>
+        <TouchableOpacity style={styles.right} onPress ={auth.logOut}>
+        <Block>
           <FontAwesome name="sign-out" size={25} color={colors.lightblack} />
         </Block>
+        </TouchableOpacity>
       </Block>
     );
   }
