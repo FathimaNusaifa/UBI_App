@@ -1,19 +1,29 @@
 import {StyleSheet, StatusBar} from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Screen, Block, Typography, Button, TextBox} from '../components/index';
+import {Screen, Block } from '../components/index';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
+import * as Yup from 'yup';
 import {colors} from '../theme';
 import routes from '../navigation/routes';
+import Header from '../navigation/Header';
+
+// Form Components
+import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label('Email')
+});
 
 const  ForgotPassword = () => {
-  const [email, setEmail] = useState(null);
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState(false);
   const navigation = useNavigation();
 
-  const handleReset = () => {
+  const handleReset = async ({email}) => {
     console.log(email);
-    navigation.navigate(routes.WELCOME);
+    navigation.navigate(routes.OTPSCREEN);
   };
 
   return (
@@ -22,33 +32,28 @@ const  ForgotPassword = () => {
       <LinearGradient
         colors={[colors.secondary, colors.primary]}
         style={styles.linearBg}>
-        <Animatable.View animation="zoomIn" style={styles.animationBlock}>
-          <Block center>
-            <Block white style={styles.logo}>
-            <Typography black center bold size={25}>UBIA</Typography>
+          <Block flex={1}>
+            <Header back/>
           </Block>
-          </Block>
-          <Block>
-            <Typography black style={styles.label} >Forgot Password?</Typography>
-            <TextBox
-              email
-              icon="mail"
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              placeholder="Your email"
-            />
-            <Button gradient shadow onPress={() => handleReset()}>
-              <Typography center white bold size={15}>
-                PROCEED
-              </Typography>
-            </Button>
-            <Button white shadow onPress={() => navigation.goBack()}>
-              <Typography center black bold size={15}>
-                GO BACK TO SIGN IN
-              </Typography>
-            </Button>
-          </Block>
+        <Animatable.View animation="fadeInUpBig" style={styles.animationBlock}>
+        <Form
+              initialValues={{ email: ''}}
+              validationSchema={validationSchema}
+              onSubmit={handleReset}>
+              <ErrorMessage error={error} visible={error} />
+              <FormInput
+                  name="email"
+                  icon="mail"
+                  placeholder="Email"
+                  email
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="emailAddress"
+              />
+              <SubmitButton title="PROCEED" />
+            </Form>
         </Animatable.View>
+        <Block flex={1} />
       </LinearGradient>
     </Screen>
   );

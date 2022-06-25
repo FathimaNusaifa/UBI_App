@@ -1,7 +1,7 @@
 import {StyleSheet, StatusBar} from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Screen, Block, Typography, Button, TextBox} from '../components/index';
+import {Screen, Block} from '../components/index';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Yup from 'yup';
@@ -13,16 +13,18 @@ import Header from '../navigation/Header';
 import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
 
 const validationSchema = Yup.object().shape({
-  key: Yup.string().required().min(6).label('Key')
+  password: Yup.string().required().min(6).label('Password').matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+    'Password Not Strong'
+  ) ,
+  confirmPassword: Yup.string().required().label('ConfirmPassword').oneOf([Yup.ref('password'), null], 'Passwords must match')
 });
 
-const  ForgotPassword = () => {
+const  ResetPassScreen = () => {
   const [error, setError] = useState(false);
-  const navigation = useNavigation();
 
-  const handleVerification = ({key}) => {
-    console.log(key);
-    navigation.navigate(routes.SIGNUP);
+  const handleReset = async ({ confirmPassword, password}) => {
+    console.log(confirmPassword, password);
   };
 
   return (
@@ -36,20 +38,32 @@ const  ForgotPassword = () => {
           </Block>
         <Animatable.View animation="fadeInUpBig" style={styles.animationBlock}>
         <Form
-              initialValues={{ key: ''}}
+              initialValues={{
+                password: '',
+                confirmPassword : ''
+              }}
               validationSchema={validationSchema}
-              onSubmit={handleVerification}>
+              onSubmit={handleReset}>
               <ErrorMessage error={error} visible={error} />
               <FormInput
-                  name="key"
-                  icon="key"
-                  placeholder="Verification Key"
-                  phone
+                  name="password"
+                  icon="lock-closed"
+                  placeholder="Password"
+                  secureTextEntry
                   autoCapitalize="none"
                   autoCorrect={false}
-                  textContentType="telephoneNumber"
+                  textContentType="password"
               />
-              <SubmitButton title="VERIFY" />
+              <FormInput
+                  name="confirmPassword"
+                  icon="lock-closed-outline"
+                  placeholder="Confirm Password"
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  textContentType="password"
+              />
+              <SubmitButton title="RESET PASSWORD" />
             </Form>
         </Animatable.View>
         <Block flex={1} />
@@ -58,7 +72,7 @@ const  ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassScreen;
 
 const styles = StyleSheet.create({
   linearBg: {
@@ -74,6 +88,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius : 30,
     paddingVertical: 30,
     paddingHorizontal: 30
+  },
+  logo : {
+    width : 200,
+    height : 100,
+    marginTop : -75,
+    justifyContent : 'center',
+    borderTopLeftRadius: 100,
+    borderTopRightRadius: 100
   },
   label : {
     paddingLeft : 5,
