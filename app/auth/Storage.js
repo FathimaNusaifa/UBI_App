@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import jwtDecode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 const key = '@authToken';
 
@@ -24,9 +24,9 @@ const getToken = async () => {
     //     console.log('Error getting the auth token', error);
     // }
     try {
-        const value = await AsyncStorage.getItem(key)
+        const value = await AsyncStorage.getItem(key);
         if (value !== null) {
-          // value previously stored
+          return value;
         }
       } catch (error) {
         console.log('Error getting the auth token', error);
@@ -35,8 +35,7 @@ const getToken = async () => {
 
 const getUser = async () => {
     const token = await getToken();
-    // return token ? jwtDecode(token) : null;
-    return token ? token : null;
+    return token ? jwtDecode(token) : null;
 };
 
 const removeToken = async () => {
