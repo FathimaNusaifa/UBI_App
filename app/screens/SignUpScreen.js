@@ -6,7 +6,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import * as Yup from 'yup';
 import {colors} from '../theme/index';
 import Header from '../navigation/Header';
+
+// API
 import useAuth from '../auth/authHook';
+import authApi from '../api/auth';
 
 // Form Components
 import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
@@ -24,12 +27,33 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignInScreen = () => {
-  const [error, setError] = useState();
+  const [signUpError, setSignUpError] = useState();
   const auth = useAuth();
 
-  const handleSignUp = async (userInfo) => {
-    console.log(userInfo);
-    auth.logIn('hsjsgf64525');
+  const handleSignUp = async (formData) => {
+    const info = {
+      username : formData.name,
+      email : formData.email,
+      password : formData.password,
+      nic : formData.nic,
+      phone : formData.phone
+    };
+
+    const result = await authApi.register(info);
+
+    if (!result.ok) {
+        if (result.data) {setSignUpError(result.data);}
+        else {
+            setSignUpError('An unexpected error occurred.');
+            console.log(result);
+        }
+        return;
+    }
+
+    if (result.ok) {
+        const loginResult = await authApi.login(info.email, info.password);
+        auth.logIn(loginResult.data);
+    }
   };
 
   return (
@@ -63,7 +87,7 @@ const SignInScreen = () => {
               }}
               validationSchema={validationSchema}
               onSubmit={handleSignUp}>
-              <ErrorMessage error={error} visible={error} />
+              <ErrorMessage error={signUpError} visible={signUpError} />
               <FormInput
                   name="email"
                   icon="mail"

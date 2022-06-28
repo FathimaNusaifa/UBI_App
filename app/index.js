@@ -14,12 +14,15 @@ const Index = () => {
   const restoreUser = async () => {
     const loggeduser = await authStorage.getUser();
     if (loggeduser) {
+      console.log(loggeduser);
       setUser(user);
     }
   };
 
   useEffect(() => {
-    restoreUser();
+    setTimeout(() => {
+      restoreUser();
+    }, 5000);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

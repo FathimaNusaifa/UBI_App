@@ -8,7 +8,10 @@ import * as Yup from 'yup';
 import {colors} from '../theme';
 import routes from '../navigation/routes';
 import Header from '../navigation/Header';
+
+// API
 import useAuth from '../auth/authHook';
+import authApi from '../api/auth';
 
 // Form Components
 import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
@@ -23,9 +26,13 @@ const SignInScreen = () => {
   const auth = useAuth();
   const [loginFailed, setloginFailed] = useState(false);
 
-  const handleLogin = async () => {
-    setloginFailed(true);
-    auth.logIn('bvkla63279dhsdh');
+  const handleSubmit = async ({email, password}) => {
+    setloginFailed(false);
+    const result = await authApi.login(email, password);
+    if (!result.ok) {return setloginFailed(result.data);}
+
+    setloginFailed(false);
+    auth.logIn(result.data);
 };
 
   return (
@@ -47,8 +54,8 @@ const SignInScreen = () => {
           <Form
               initialValues={{ email: '', password: '' }}
               validationSchema={validationSchema}
-              onSubmit={handleLogin}>
-              <ErrorMessage error="Invalid email or password!" visible={loginFailed} />
+              onSubmit={handleSubmit}>
+              <ErrorMessage error={loginFailed} visible={loginFailed} />
               <FormInput
                   name="email"
                   icon="mail"
