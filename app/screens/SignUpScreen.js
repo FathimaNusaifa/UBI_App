@@ -1,15 +1,19 @@
+/* eslint-disable no-unused-vars */
 import {StyleSheet, ScrollView, StatusBar} from 'react-native';
 import React, {useState} from 'react';
-import {Screen, Block, Typography } from '../components/index';
+import {Screen, Block, Typography, Button } from '../components/index';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Yup from 'yup';
 import {colors} from '../theme/index';
 import Header from '../navigation/Header';
+import {useNavigation} from '@react-navigation/native';
+import routes from '../navigation/routes';
 
 // API
 import useAuth from '../auth/authHook';
 import authApi from '../api/auth';
+import verifyKeyApi from '../api/key';
 
 // Form Components
 import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
@@ -21,16 +25,22 @@ const validationSchema = Yup.object().shape({
   phone: Yup.string().required().min(3).label('Phone'),
   password: Yup.string().required().min(6).label('Password').matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-    'Password Not Strong'
+    'Type Strong Password!'
   ) ,
   confirmPassword: Yup.string().required().label('ConfirmPassword').oneOf([Yup.ref('password'), null], 'Passwords must match')
 });
 
-const SignInScreen = () => {
+const SignInScreen = ({route}) => {
+  const id = route.params.id;
   const [signUpError, setSignUpError] = useState();
   const auth = useAuth();
+  const navigation = useNavigation();
 
   const handleSignUp = async (formData) => {
+    setSignUpError(false);
+    const verification = await verifyKeyApi.updateKey({verificationToken : id});
+    if (!verification.ok) {return setSignUpError(verification.data);}
+
     const info = {
       username : formData.name,
       email : formData.email,
@@ -40,7 +50,6 @@ const SignInScreen = () => {
     };
 
     const result = await authApi.register(info);
-
     if (!result.ok) {
         if (result.data) {setSignUpError(result.data);}
         else {
@@ -63,12 +72,12 @@ const SignInScreen = () => {
         colors={[colors.secondary, colors.primary]}
         style={styles.linearBg}>
             <Header back/>
-        <Block flex={0.3} center middle>
+        <Block flex={0.2} center middle>
           <Typography bold white size={30}>
-            Welcome to UBI!
+          Create Account
           </Typography>
           <Typography bold white>
-            Sign Up
+          Sign up to get started!
           </Typography>
         </Block>
         <Animatable.View
@@ -142,6 +151,12 @@ const SignInScreen = () => {
               />
               <SubmitButton title="SIGN UP" />
             </Form>
+            <Typography center primary bold size={12}>
+              Already have an Account?
+            </Typography>
+            <Button white shadow onPress={() => navigation.navigate(routes.SIGNIN)}>
+              <Typography black bold center body>SIGN IN</Typography>
+            </Button>
           </ScrollView>
         </Animatable.View>
       </LinearGradient>
@@ -156,7 +171,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   animationBlock: {
-    flex: 0.7,
+    flex: 0.8,
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

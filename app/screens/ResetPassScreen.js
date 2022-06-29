@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {StyleSheet, StatusBar} from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -12,6 +13,9 @@ import Header from '../navigation/Header';
 // Form Components
 import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
 
+// API
+import passwordApi from '../api/password';
+
 const validationSchema = Yup.object().shape({
   password: Yup.string().required().min(6).label('Password').matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
@@ -20,11 +24,33 @@ const validationSchema = Yup.object().shape({
   confirmPassword: Yup.string().required().label('ConfirmPassword').oneOf([Yup.ref('password'), null], 'Passwords must match')
 });
 
-const  ResetPassScreen = () => {
-  const [error, setError] = useState(false);
+const  ResetPassScreen = ({route}) => {
+  const email = route.params.email;
+  const otp = route.params.otp;
+  const [resetError, setResetError] = useState(false);
+  const navigation = useNavigation();
 
-  const handleReset = async ({ confirmPassword, password}) => {
-    console.log(confirmPassword, password);
+  const handleReset = async ({ password}) => {
+    setResetError(false);
+
+    const info = {
+      verificationKey : otp,
+      email : email,
+      newPassword : password
+    };
+    const result = await passwordApi.resetPassword(info);
+
+    if (result.ok) {
+      console.log(result.data);
+      setResetError(false);
+      navigation.navigate(routes.SIGNIN);
+    }
+    if (result.problem) {
+      console.log(result.data);
+      return setResetError(result.data);
+    }
+
+    setResetError(false);
   };
 
   return (
@@ -44,7 +70,7 @@ const  ResetPassScreen = () => {
               }}
               validationSchema={validationSchema}
               onSubmit={handleReset}>
-              <ErrorMessage error={error} visible={error} />
+              <ErrorMessage error={resetError} visible={resetError} />
               <FormInput
                   name="password"
                   icon="lock-closed"

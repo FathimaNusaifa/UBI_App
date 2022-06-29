@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {StyleSheet, StatusBar} from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -12,18 +13,30 @@ import Header from '../navigation/Header';
 // Form Components
 import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
 
+// API
+import passwordApi from '../api/password';
+
 const validationSchema = Yup.object().shape({
   otp: Yup.string().required().min(6).label('OTP')
 });
 
-const  ForgotPassword = () => {
-  const [error, setError] = useState(false);
+const  ForgotPassword = ({route}) => {
+  const email = route.params.email;
+  const [verify, setverifyFailed] = useState(false);
   const navigation = useNavigation();
 
   const handleReset = async ({otp}) => {
-    console.log(otp);
-    navigation.navigate(routes.RESETPASSSCREEN);
+    setverifyFailed(false);
+    const result = await passwordApi.verifyKey(otp);
 
+    if (result.ok) {
+      setverifyFailed(false);
+      console.log(result.data);
+      navigation.navigate(routes.RESETPASSSCREEN,{email : email, otp :otp});
+    }
+
+    if (!result.ok) {return setverifyFailed(result.data);}
+    setverifyFailed(false);
   };
 
   return (
@@ -40,7 +53,7 @@ const  ForgotPassword = () => {
               initialValues={{ otp: ''}}
               validationSchema={validationSchema}
               onSubmit={handleReset}>
-              <ErrorMessage error={error} visible={error} />
+              <ErrorMessage error={verify} visible={verify} />
               <FormInput
                   name="otp"
                   icon="ios-keypad"

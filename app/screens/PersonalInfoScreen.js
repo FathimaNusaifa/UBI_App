@@ -33,6 +33,7 @@ const PersonalInfoScreen = () => {
   const [loadingError, setLoadingError] = useState(null);
 
   const handleSubmit = async (formData) => {
+    console.log(formData);
     setUpdateError(false);
     const info = {
       firstname: formData.firstname,
@@ -109,7 +110,7 @@ const PersonalInfoScreen = () => {
               onSubmit={handleSubmit}>
               <ErrorMessage error={updateError} visible={updateError} />
               <FormInput
-                name="firstName"
+                name="firstname"
                 icon="person"
                 placeholder={profile.firstname}
                 autoCapitalize="none"
@@ -117,7 +118,7 @@ const PersonalInfoScreen = () => {
                 textContentType="username"
               />
               <FormInput
-                name="lastName"
+                name="lastname"
                 icon="person"
                 placeholder={profile.lastname}
                 autoCapitalize="none"
@@ -125,7 +126,7 @@ const PersonalInfoScreen = () => {
                 textContentType="username"
               />
               <FormInput
-                name="userName"
+                name="username"
                 icon="person"
                 placeholder={profile.username}
                 autoCapitalize="none"

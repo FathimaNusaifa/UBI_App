@@ -12,17 +12,24 @@ import Header from '../navigation/Header';
 // Form Components
 import { ErrorMessage, Form, FormInput, SubmitButton } from '../components/Form/index';
 
+// API
+import verifyKeyApi from '../api/key';
+
 const validationSchema = Yup.object().shape({
   key: Yup.string().required().min(6).label('Key')
 });
 
 const  ForgotPassword = () => {
-  const [error, setError] = useState(false);
+  const [verifyFailed, setverifyFailed] = useState(false);
   const navigation = useNavigation();
 
-  const handleVerification = ({key}) => {
-    console.log(key);
-    navigation.navigate(routes.SIGNUP);
+  const handleSubmit = async ({key}) => {
+    setverifyFailed(false);
+    const result = await verifyKeyApi.verifyKey(key);
+    if (!result.ok) {return setverifyFailed(result.data);}
+
+    setverifyFailed(false);
+    navigation.navigate(routes.SIGNUP, {id : result.data._id});
   };
 
   return (
@@ -35,11 +42,20 @@ const  ForgotPassword = () => {
             <Header back/>
           </Block>
         <Animatable.View animation="fadeInUpBig" style={styles.animationBlock}>
+            <Typography bold black>
+            Welcome...!
+            </Typography>
+            <Typography light size={15}>
+            PAY YOUR INSURANCE BILLS WITH US
+            </Typography>
+            <Typography primary bold size={13}>
+            Reduce your car insurance bills by up to 30%.
+            </Typography>
         <Form
               initialValues={{ key: ''}}
               validationSchema={validationSchema}
-              onSubmit={handleVerification}>
-              <ErrorMessage error={error} visible={error} />
+              onSubmit={handleSubmit}>
+              <ErrorMessage error={verifyFailed} visible={verifyFailed} />
               <FormInput
                   name="key"
                   icon="key"

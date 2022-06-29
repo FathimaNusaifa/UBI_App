@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {StyleSheet, StatusBar} from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -17,13 +18,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const  ForgotPassword = () => {
-  const [email, setEmail] = useState('');
   const [error, setError] = useState(false);
   const navigation = useNavigation();
 
   const handleReset = async ({email}) => {
-    console.log(email);
-    navigation.navigate(routes.OTPSCREEN);
+    navigation.navigate(routes.OTPSCREEN, {email : email});
   };
 
   return (
