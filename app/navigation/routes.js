@@ -24,5 +24,6 @@ export default Object.freeze({
   HELP: 'Help',
   PRIVACYPOLICY: 'PrivacyPolicy',
   RESETPASSSCREEN : 'ResetPassScreen',
-  OTPSCREEN : 'OTPScreen'
+  OTPSCREEN : 'OTPScreen',
+  ABOUT : 'AboutScreen'
 });

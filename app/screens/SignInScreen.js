@@ -1,7 +1,7 @@
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Screen, Block, Typography} from '../components/index';
+import {Screen, Block, Typography, Button} from '../components/index';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Yup from 'yup';
@@ -77,9 +77,14 @@ const SignInScreen = () => {
               <SubmitButton title="SIGN IN" />
             </Form>
           <Block flex={false} style={styles.forgotBlock}>
-            <Typography center primary bold size={12} onPress={() => navigation.navigate(routes.FORGOTPASSWORD)}>
+            <Button white shadow onPress={() => navigation.navigate(routes.KEYVERIFY)}>
+              <Typography black bold center body>SIGN UP</Typography>
+            </Button>
+            <TouchableOpacity style={styles.forgotButton} onPress={() => navigation.navigate(routes.FORGOTPASSWORD)}>
+              <Typography center primary bold size={12}>
               Forgot Password?
             </Typography>
+            </TouchableOpacity>
           </Block>
         </Animatable.View>
       </LinearGradient>
@@ -122,52 +127,13 @@ const styles = StyleSheet.create({
   },
   forgotBlock : {
     flex : 1,
+    justifyContent : 'center',
+    paddingTop : 0
+  },
+  forgotButton : {
+    width : '100%',
+    height: 30,
+    alignItems : 'center',
     justifyContent : 'center'
   }
 });
-
-/**
- * <View style={styles.container}>
-      <Text>SignInScreen</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
-        <Text>Go Back</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ForgotPassword')}>
-        <Text>Forgot Password</Text>
-      </TouchableOpacity>
-    </View>
- */
-
-    /*
-    {"value":{"email":"","password":""},"path":"password","type":"required","errors":["password is a required field"],"params":{"value":"","originalValue":"","path":"password"},"inner":[],"name":"ValidationError","message":"password is a required field"}
- LOG  {"value":{"email":"","password":""},"path":"password","type":"required","errors":["password is a required field"],"params":{"value":"","originalValue":"","path":"password"},"inner":[],"name":"ValidationError","message":"password is a required field"}
-    */
-
-  /* <Block>
-            <Typography black style={styles.label} >Email</Typography>
-            <TextBox
-              email
-              icon="mail"
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              placeholder="Your email"
-            />
-            <Typography black style={styles.label} >Password</Typography>
-            <TextBox
-              icon="lock-closed-sharp"
-              onChangeText={setPassword}
-              autoCapitalize="none"
-              placeholder="Your password"
-              secureTextEntry={true}
-            />
-            {
-              isError ? (
-                <Typography accent bold>{errorMessage}</Typography>
-              ) : null
-            }
-            <Button gradient shadow onPress={() => handleLogin()}>
-              <Typography center white bold size={15}>
-                SIGN IN
-              </Typography>
-            </Button>
-          </Block> */

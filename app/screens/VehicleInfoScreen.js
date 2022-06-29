@@ -1,13 +1,51 @@
 import {StyleSheet, StatusBar, ScrollView, Image } from 'react-native';
-import React from 'react';
-import { Block, Typography } from '../components/index';
+import React, {useState, useEffect} from 'react';
+import { Block, Typography, Loader, Message } from '../components/index';
 import {colors} from '../theme';
 
+// API
+import vehiclesApi from '../api/vehicle';
+
 const VehicleInfoScreen = () => {
+  const [loading, setLoading] = useState(true);
+  const [vehicle, setVehicle] = useState({});
+  const [loadingError, setLoadingError] = useState(null);
+
+  const getVehicleInfo = async () => {
+    setLoading(true);
+    const result = await vehiclesApi.getInfo();
+
+    setVehicle(result.data);
+
+
+    if (!result.problem) {
+        setVehicle(result.data);
+        setLoading(false);
+        setLoadingError(null);
+    }
+
+    if (!result.ok) {
+        setLoading(false);
+        setLoadingError('Server Failed to Response!');
+        return;
+    }
+  };
+
+  useEffect(() => {
+    getVehicleInfo();
+  }, []);
+
   return (
     <ScrollView style={styles.scrollBlock}>
       <StatusBar backgroundColor={colors.white} barStyle="light-content" />
-      <Block flex={1} center>
+      {
+        loading ? (
+          <Loader />
+        ) : loadingError ? (
+          <Message error={loadingError} visible={loadingError} />
+        ) : (
+          <>
+          <Block flex={1} center>
       <Image
         style={styles.image}
         resizeMode="cover"
@@ -17,29 +55,32 @@ const VehicleInfoScreen = () => {
       <Block column>
         <Block row style={styles.infoBlock}>
           <Typography dark  title>Owner's Name</Typography>
-          <Typography dark bold title>John Wick</Typography>
+          <Typography dark bold title>{vehicle.name}</Typography>
         </Block>
         <Block row style={styles.infoBlock}>
           <Typography dark  title>Brand</Typography>
-          <Typography dark bold title>Toyota</Typography>
+          <Typography dark bold title>{vehicle.brand}</Typography>
         </Block>
         <Block row style={styles.infoBlock}>
           <Typography dark  title>Category</Typography>
-          <Typography dark bold title>SUV</Typography>
+          <Typography dark bold title>{vehicle.category}</Typography>
         </Block>
         <Block row style={styles.infoBlock}>
           <Typography dark  title>Model</Typography>
-          <Typography dark bold title>CH-R</Typography>
+          <Typography dark bold title>{vehicle.model}</Typography>
         </Block>
         <Block row style={styles.infoBlock}>
           <Typography dark  title>Year</Typography>
-          <Typography dark bold title>2018</Typography>
+          <Typography dark bold title>{vehicle.year}</Typography>
         </Block>
         <Block row style={styles.infoBlock}>
           <Typography dark  title>Chassis No</Typography>
-          <Typography dark bold title>SV30-0169266</Typography>
+          <Typography dark bold title>{vehicle.chassisNo}</Typography>
         </Block>
       </Block>
+          </>
+        )
+      }
     </ScrollView>
   );
 };

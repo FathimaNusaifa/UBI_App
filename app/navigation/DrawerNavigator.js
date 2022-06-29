@@ -15,6 +15,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import routes from './routes';
 import { colors } from '../theme/colors';
 import DraweContent from '../navigation/DraweContent';
+import SettingsStackNavigator from './SettingsStackNavigator';
+import ProfileNavigator from './ProfileNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -36,6 +38,16 @@ const DrawerNavigator = () => {
             <MaterialCommunityIcons name="home" size={size} color={color} />
         )
         }} />
+        {/* <Drawer.Screen name={routes.SETTINGS} component={SettingsStackNavigator} options={{
+          drawerIcon : ({color,size}) => (
+            <MaterialCommunityIcons name="cog" size={size} color={color} />
+        )
+        }} />
+        <Drawer.Screen name={'Profile'} component={ProfileNavigator} options={{
+          drawerIcon : ({color,size}) => (
+            <FontAwesome5 name="user-alt" size={size} color={color} />
+        )
+        }} /> */}
         <Drawer.Screen name={'Payment History'} component={PaymentNavigator} options={{
           drawerIcon : ({color,size}) => (
             <FontAwesome5 name="cc-amazon-pay" size={size} color={color} />

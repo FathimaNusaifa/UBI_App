@@ -14,7 +14,7 @@ const SettingScreen = ({navigation}) => {
       <StatusBar backgroundColor={colors.white} barStyle="light-content" />
       <Header title="Settings" header />
       <Block flex={1} style={styles.container}>
-        <Block flex={false} style={styles.button}>
+        {/* <Block flex={false} style={styles.button}>
         <Text>Dark Mode</Text>
         <Switch
         trackColor={{ false: colors.light, true: colors.primary }}
@@ -23,9 +23,9 @@ const SettingScreen = ({navigation}) => {
         onValueChange={toggleSwitch}
         value={isEnabled}
       />
-        </Block>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.HELP)}>
-        <Text>About</Text>
+        </Block> */}
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.ABOUT)}>
+        <Text>About Us</Text>
         <MaterialIcons name="arrow-forward-ios" size={30} color={colors.lightblack} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(routes.HELP)}>
